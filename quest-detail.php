@@ -166,30 +166,30 @@ if (isset($_POST['ipquest'])) {
         }
 
         if ($rs_quest['quest_human'] == 'นักผจญภัย 1 คน') {
-           $numhuman = 1;
-        }else{
-            $numhuman = $rs_quest['quest_human_more'];
-        }
+         $numhuman = 1;
+     }else{
+        $numhuman = $rs_quest['quest_human_more'];
+    }
 
 
 
-        if ($rs_quest['quest_type_Rewards'] == '0') {
-            $tpyeRewards = 'ได้รับทุกรายการ';
-        }else{
-            $tpyeRewards = 'เลือกอย่างไดอย่างหนึ่ง';
-        }
+    if ($rs_quest['quest_type_Rewards'] == '0') {
+        $tpyeRewards = 'ได้รับทุกรายการ';
+    }else{
+        $tpyeRewards = 'เลือกอย่างไดอย่างหนึ่ง';
+    }
 
-        $sql_activity = "SELECT * FROM quest_activity_detail WHERE quest_id = '$id_quest' AND  member_id = '".$_SESSION['guild_id']."' AND  activety_status = 'สร้างเควส' ";
+    $sql_activity = "SELECT * FROM quest_activity_detail WHERE quest_id = '$id_quest' AND  member_id = '".$_SESSION['guild_id']."' AND  activety_status = 'สร้างเควส' ";
 
-        $result_activity = mysqli_query($conn,$sql_activity);
-        $rs_activity = mysqli_fetch_assoc($result_activity);
-        if ($rs_activity) {
+    $result_activity = mysqli_query($conn,$sql_activity);
+    $rs_activity = mysqli_fetch_assoc($result_activity);
+    if ($rs_activity) {
             $statusAdd = 1; //เจ้าของภารกิจ
         }else{
             $statusAdd = 0; // นักภจญภัย
         }
 
-      
+
 
         $sql_quest_reward = "SELECT * FROM rewards_quest WHERE rq_id_quest = '$id_quest' ";
         $result_quest_reward = mysqli_query($conn, $sql_quest_reward);
@@ -250,118 +250,118 @@ if (isset($_POST['ipquest'])) {
                               </div>
                               <div class="row mb-2">
                                 <div class="col-md-6 text-dark">
-                                 <label> ระยะเวลาการทำภารกิจ : <?= $rs_quest['quest_duration'] ?></label><br>
-                                 <label> ประเภทของภารกิจ : <?= $tpye ?></label><br>
-                                 <label> นักผจญภัย : <?= $rs_quest['quest_status'] ?></label>
+                                   <label> ระยะเวลาการทำภารกิจ : <?= $rs_quest['quest_duration'] ?></label><br>
+                                   <label> ประเภทของภารกิจ : <?= $tpye ?></label><br>
+                                   <label> นักผจญภัย : <?= $rs_quest['quest_status'] ?></label>
+                               </div>
+                               <div class="col-md-6 text-dark">
+                                 <?php $nn = 1; while ($rs_quest_reward = mysqli_fetch_assoc($result_quest_reward)) {
+                                     ?>
+                                     <label><label style="color: #0a82e1;">ลำดับที่ <?= $nn ?></label> <?= $rs_quest_reward['rq_name_Rewards'].'  '.$rs_quest_reward['rq_Rewards_type'] ?></label><br>
+                                     <?php
+                                     $nn++; } ?>
+                                 </div>
                              </div>
-                             <div class="col-md-6 text-dark">
-                               <?php $nn = 1; while ($rs_quest_reward = mysqli_fetch_assoc($result_quest_reward)) {
-                                   ?>
-                                   <label><label style="color: #0a82e1;">ลำดับที่ <?= $nn ?></label> <?= $rs_quest_reward['rq_name_Rewards'].'  '.$rs_quest_reward['rq_Rewards_type'] ?></label><br>
-                                   <?php
-                                   $nn++; } ?>
-                               </div>
-                           </div>
-                           <div class="row mb-2">
-                            <?php
-                            $sql_categories = " SELECT * FROM categories WHERE id = " . $rs_quest['quest_category_id'];
-                            $result_categories = mysqli_query($conn, $sql_categories);
-                            $num_categories = mysqli_num_rows($result_categories);
-                            $rs_categories = mysqli_fetch_assoc($result_categories);
-                            ?>
-                            <?php if ($num_categories > 0) { ?>
-                                <div class="col-md-6 text-dark">Hastag : <span class="badge badge-primary"><?= $rs_categories['categories_name'] ?></span></div>
-                                <div class="col-md-6 text-dark">
-                                    <div class="row">
-                                        <div class="col-md-6 text-left">Categories1 : <?= $rs_quest['quest_catagory'] ?></div>
-                                        <div class="col-md-6 text-left">Categories2 : <?= $rs_categories['categories_name'] ?></div>
-                                    </div>
-                                </div>
-                            <?php } else { ?>
-                                <div class="col-md-6 text-dark">Hastag : <span class="badge badge-primary"><?= $rs_quest['quest_category_note'] ?></span></div>
-                                <div class="col-md-6 text-dark">
-                                    <div class="row">
-                                        <?php
-                                        if ($rs_quest['quest_category_id'] == 0) {
-                                            $other_cate = "อื่นๆ";
-                                        }
-                                        ?>
-                                        <div class="col-md-6 text-left">Categories1 : <?= $other_cate ?></div>
-                                        <div class="col-md-6 text-left">Categories2 : <?= $rs_quest['quest_category_note'] ?></div>
-                                    </div>
-                                </div>
-                            <?php } ?>
-                        </div>
-                        <hr class="border-dark">
-                        <div class="col-md-12">
-                            <h4 class="text-dark">Quest Descriptions | รายละเอียดภารกิจ</h4>
-                            <div class="mt-3">
-                                <?= $rs_quest['quest_description'] ?>
-                            </div>
-                        </div>
-                        <div class="clearfix mb-5" style="clear:both"></div>
-                        <div class="col-md-12">
-                            <h4 class="text-dark">Quest Conditions | เงื่อนไขการส่งมอบภารกิจ</h4>
-                            <div class="mt-3 text-dark">
-                                <?php $nn = 1; while ($rs_quest_conditions = mysqli_fetch_assoc($result_quest_conditions)) {
-                                   ?>
-                                   <label><label style="color: #0a82e1;">ลำดับที่ <?= $nn ?></label> <?= $rs_quest_conditions['cq_conditionsName_quest']; ?></label><br>
-                                   <?php if ($rs_quest_conditions['cq_conditionsImg_quest'] != '') {  ?>
-                                       <img src="img/imgQuest/<?= $rs_quest_conditions['cq_conditionsImg_quest']; ?>">
-                                   <?php  } ?>
-
-
-                                   <?php
-                                   $nn++; } ?>
-                               </div>
-                           </div>
-                           <div class="clearfix mb-5" style="clear:both"></div>
-
-                           <div class="col-md-12 mt-3 mb-2">
-                            <h4 class="text-dark mb-3">Quest Location | ตำแหน่งการทำภารกิจ</h4>
-                            <div class="ml-3 text-dark mt-2 mb-1">
-                                <?= $rs_quest['quest_location'] ?> ที่อยู่
+                             <div class="row mb-2">
                                 <?php
-                                if ($rs_quest['quest_location_address'] != "") {
-                                    echo $rs_quest['quest_location_address'];
-                                } else {
-                                    echo $rs_quest['quest_location_map'];
-                                }
+                                $sql_categories = " SELECT * FROM categories WHERE id = " . $rs_quest['quest_category_id'];
+                                $result_categories = mysqli_query($conn, $sql_categories);
+                                $num_categories = mysqli_num_rows($result_categories);
+                                $rs_categories = mysqli_fetch_assoc($result_categories);
                                 ?>
+                                <?php if ($num_categories > 0) { ?>
+                                    <div class="col-md-6 text-dark">Hastag : <span class="badge badge-primary"><?= $rs_categories['categories_name'] ?></span></div>
+                                    <div class="col-md-6 text-dark">
+                                        <div class="row">
+                                            <div class="col-md-6 text-left">Categories1 : <?= $rs_quest['quest_catagory'] ?></div>
+                                            <div class="col-md-6 text-left">Categories2 : <?= $rs_categories['categories_name'] ?></div>
+                                        </div>
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="col-md-6 text-dark">Hastag : <span class="badge badge-primary"><?= $rs_quest['quest_category_note'] ?></span></div>
+                                    <div class="col-md-6 text-dark">
+                                        <div class="row">
+                                            <?php
+                                            if ($rs_quest['quest_category_id'] == 0) {
+                                                $other_cate = "อื่นๆ";
+                                            }
+                                            ?>
+                                            <div class="col-md-6 text-left">Categories1 : <?= $other_cate ?></div>
+                                            <div class="col-md-6 text-left">Categories2 : <?= $rs_quest['quest_category_note'] ?></div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                             </div>
-                            <?php if ($rs_quest['quest_location_map'] != "") { ?>
-                                <div class="form-group row">
-                                    <div class="col-md-12 pt-2 mt-3">
-                                        <?php
-                                        $map = $rs_quest['quest_location_map'];
-                                        $array_date = explode(')', $map);
-                                        $msg1 = $array_date[0];
-                                        $msg2 = $array_date[1];
-
-                                        $key = str_replace("(", "", $msg1);
-                                        $latlong = str_replace(" ", "", $key);
-                                        ?>
-                                        <iframe width="100%" height="350px" style="border:0;" allowfullscreen="" loading="lazy" src="https://maps.google.com/maps?q=<?= $latlong ?>&hl=th;z=14&amp;output=embed"></iframe>
-                                    </div>
+                            <hr class="border-dark">
+                            <div class="col-md-12">
+                                <h4 class="text-dark">Quest Descriptions | รายละเอียดภารกิจ</h4>
+                                <div class="mt-3">
+                                    <?= $rs_quest['quest_description'] ?>
                                 </div>
-                            <?php } ?>
-                            <?php if ($rs_quest['quest_location_address'] != "") { ?>
-                                <div class="form-group row">
-                                    <div class="col-md-12 pt-2 mt-3">
-                                        <?php
-                                        $map = $rs_quest['quest_location_address'];
-                                        $array_date = explode(')', $map);
-                                        $msg1 = $array_date[0];
-                                        $msg2 = $array_date[1];
+                            </div>
+                            <div class="clearfix mb-5" style="clear:both"></div>
+                            <div class="col-md-12">
+                                <h4 class="text-dark">Quest Conditions | เงื่อนไขการส่งมอบภารกิจ</h4>
+                                <div class="mt-3 text-dark">
+                                    <?php $nn = 1; while ($rs_quest_conditions = mysqli_fetch_assoc($result_quest_conditions)) {
+                                     ?>
+                                     <label><label style="color: #0a82e1;">ลำดับที่ <?= $nn ?></label> <?= $rs_quest_conditions['cq_conditionsName_quest']; ?></label><br>
+                                     <?php if ($rs_quest_conditions['cq_conditionsImg_quest'] != '') {  ?>
+                                         <img src="img/imgQuest/<?= $rs_quest_conditions['cq_conditionsImg_quest']; ?>">
+                                     <?php  } ?>
 
-                                        $key = str_replace("(", "", $msg1);
-                                        $latlong = str_replace(" ", "", $key);
-                                        ?>
-                                        <iframe width="100%" height="350px" style="border:0;" allowfullscreen="" loading="lazy" src="https://maps.google.com/maps?q=<?= $latlong ?>&hl=th;z=14&amp;output=embed"></iframe>
-                                    </div>
+
+                                     <?php
+                                     $nn++; } ?>
+                                 </div>
+                             </div>
+                             <div class="clearfix mb-5" style="clear:both"></div>
+
+                             <div class="col-md-12 mt-3 mb-2">
+                                <h4 class="text-dark mb-3">Quest Location | ตำแหน่งการทำภารกิจ</h4>
+                                <div class="ml-3 text-dark mt-2 mb-1">
+                                    <?= $rs_quest['quest_location'] ?> ที่อยู่
+                                    <?php
+                                    if ($rs_quest['quest_location_address'] != "") {
+                                        echo $rs_quest['quest_location_address'];
+                                    } else {
+                                        echo $rs_quest['quest_location_map'];
+                                    }
+                                    ?>
                                 </div>
-                            <?php } ?>
-                        </div>
+                                <?php if ($rs_quest['quest_location_map'] != "") { ?>
+                                    <div class="form-group row">
+                                        <div class="col-md-12 pt-2 mt-3">
+                                            <?php
+                                            $map = $rs_quest['quest_location_map'];
+                                            $array_date = explode(')', $map);
+                                            $msg1 = $array_date[0];
+                                            $msg2 = $array_date[1];
+
+                                            $key = str_replace("(", "", $msg1);
+                                            $latlong = str_replace(" ", "", $key);
+                                            ?>
+                                            <iframe width="100%" height="350px" style="border:0;" allowfullscreen="" loading="lazy" src="https://maps.google.com/maps?q=<?= $latlong ?>&hl=th;z=14&amp;output=embed"></iframe>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                                <?php if ($rs_quest['quest_location_address'] != "") { ?>
+                                    <div class="form-group row">
+                                        <div class="col-md-12 pt-2 mt-3">
+                                            <?php
+                                            $map = $rs_quest['quest_location_address'];
+                                            $array_date = explode(')', $map);
+                                            $msg1 = $array_date[0];
+                                            $msg2 = $array_date[1];
+
+                                            $key = str_replace("(", "", $msg1);
+                                            $latlong = str_replace(" ", "", $key);
+                                            ?>
+                                            <iframe width="100%" height="350px" style="border:0;" allowfullscreen="" loading="lazy" src="https://maps.google.com/maps?q=<?= $latlong ?>&hl=th;z=14&amp;output=embed"></iframe>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
                            <!--  <div class="col-md-12 mt-2 mb-2">
                                 <h4 class="text-dark mb-3">Quest Duration | ระยะเวลาการทำภารกิจ</h4>
                                 <p class="text-dark mt-1"><?= $rs_quest['quest_duration'] ?></p>
@@ -373,82 +373,118 @@ if (isset($_POST['ipquest'])) {
                             <hr class="border-dark">
                             <div class="col-md-12 mt-2 mb-2">
                                 <h4 class="text-dark mb-3">Mura Contact | ช่องทางติดต่อผู้มอบหมายภารกิจ</h4>
-                               
+
                                 <?php $t = 1; while ($rsstcontact = mysqli_fetch_assoc($result_quest_contact)) { ?>
-                                <div class="mt-2 text-dark" class="cotext-02"><label style="color: #0a82e1;">ลำดับที่ <?=$t ?></label>  <?php echo  $rsstcontact['coq_Contact_type'].' : '.$rsstcontact['coq_Contact'] ?></div>
-                                <?php $t++; } ?>
-                            </div>
-                            <hr class="border-dark">
-                            <div class="col-md-12 mt-2 mb-2">
-                                 <?php if ($statusAdd == '0') { ?>
-                                <h4 class="text-dark mb-3">Submit a Request | ยืนความประสงค์ขอรับภารกิจ</h4>
-                                <div class="mt-2 text-dark">
+                                    <div class="mt-2 text-dark" class="cotext-02"><label style="color: #0a82e1;">ลำดับที่ <?=$t ?></label>  <?php echo  $rsstcontact['coq_Contact_type'].' : '.$rsstcontact['coq_Contact'] ?></div>
+                                    <?php $t++; } ?>
+                                </div>
+                                <hr class="border-dark">
+                                <div class="col-md-12 mt-2 mb-2">
+                                   <?php if ($statusAdd == '0') { ?>
+                                    <h4 class="text-dark mb-3">Submit a Request | ยืนความประสงค์ขอรับภารกิจ</h4>
+                                    <div class="mt-2 text-dark">
 
-                                    <div class="bt-from">
-                                        <?php
+                                        <div class="bt-from">
+                                            <?php
 
-                                        $sqlstatus = "SELECT * FROM quest_interested WHERE qi_id_quest = '".$_GET['id']."' AND qi_id_number = '".$_SESSION['guild_id']."' AND qi_status_agree = '1' ";
-                                        $resultst = mysqli_query($conn, $sqlstatus);
-                                        $rsst = mysqli_fetch_assoc($resultst);
-                                        if ($rsst) {
-                                           ?>
-                                           <div class="appud-t">รอการยืนยันจากเจ้าของภารกิจ</div>
+                                            $sqlstatus = "SELECT * FROM quest_interested WHERE qi_id_quest = '".$_GET['id']."' AND qi_id_number = '".$_SESSION['guild_id']."' AND qi_status_agree = '1' ";
+                                            $resultst = mysqli_query($conn, $sqlstatus);
+                                            $rsst = mysqli_fetch_assoc($resultst);
+                                            if ($rsst) {
+                                             ?>
+                                             <div class="appud-t">รอการยืนยันจากเจ้าของภารกิจ</div>
 
-                                           <?php
-                                        }else{
+                                             <?php
+                                         }else{
 
-                                        ?>
-                                        <div class="btn btn-lg btn-block btn-primary" id="interested" data-id="<?=$_GET['id'];?>">สนใจรับภารกิจ</div>
+                                            ?>
+                                            <div class="btn btn-lg btn-block btn-primary" id="interested" data-id="<?=$_GET['id'];?>">สนใจรับภารกิจ</div>
                                         <?php  }  ?>
                                     </div>
                                     <?php if ($rsst){
-                                    if ($sty == '0') { ?>
-                                        <div class="from-details-owner">
-                                        <div class="t-details">ข้อมูลติดต่อเจ้าของภารกิจ</div>
-                                        <div class="from-details">
-                                            <div class="d-l">
-                                            <div class="img-logo"><img src="plugin/myModal/02.jpg" class="imagecontart"> </div>        
+                                        if ($sty == '0') { ?>
+                                            <div class="from-details-owner">
+                                                <div class="t-details">ข้อมูลติดต่อเจ้าของภารกิจ</div>
+                                                <div class="from-details">
+                                                    <div class="d-l">
+                                                        <div class="img-logo"><img src="plugin/myModal/02.jpg" class="imagecontart"> </div>        
+                                                    </div>
+                                                    <div class="d-r">
+                                                        <?php while ($rsstcontact = mysqli_fetch_assoc($result_quest_contact)) { ?>
+                                                            <label class="cotext-02"><?php echo  $rsstcontact['coq_Contact_type'].' : '.$rsstcontact['coq_Contact'] ?></label><br>
+
+                                                        <?php } ?>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="d-r">
-                                                <?php while ($rsstcontact = mysqli_fetch_assoc($result_quest_contact)) { ?>
-                                                    <label class="cotext-02"><?php echo  $rsstcontact['coq_Contact_type'].' : '.$rsstcontact['coq_Contact'] ?></label><br>
 
-                                                <?php } ?>
-                                            </div>
-                                        </div>
-                                        </div>
-
-                                    <?php }  } ?>
-                                </div>
-                            <?php }else{
-
-                                 $sqlinterested = "SELECT * FROM quest_interested INNER JOIN member ON quest_interested.qi_id_number = member.id WHERE quest_interested.qi_id_quest = '".$_GET['id']."'  AND quest_interested.qi_status_agree = '1' ";
-                                 $resultinterested = mysqli_query($conn, $sqlinterested);
-
-
-                                ?>
-                                <h4 class="text-dark mb-3">Quest Status | สถานะของภารกิจ</h4>
-                                <div class="from-details01">
-                                    <div class="list-interested">
-                                     <div class="t-interested01">การตอบกลับของนักผจญภัย</div>
-                                     
-                                     <?php while ($rsstinterested = mysqli_fetch_assoc($resultinterested)) { ?>
-                                        <div class="list-in-01 mem-<?= $rsstinterested['id']?> recllass">
-                                        <div class="h33 in_l"><?= $rsstinterested['member_username']?></div>
-                                        <div class="bt-choose button1 in_r" id="lismenbber" data-id="<?=$rsstinterested['id'] ?>" data-q="<?=$_GET['id'] ?>" data-nm="<?=$rsstinterested['member_username'] ?>">เลือกนักผจญภัย</div>
-                                        </div>
-                                     <?php } ?>
-                                     <div class="footers">จำนวนนักผจญภัยที่ต้องการ <?=$numhuman ?> / 0 คน</div>
+                                        <?php }  } ?>
                                     </div>
+                                <?php }else{
 
+                                   $sqlinterested = "SELECT * FROM quest_interested INNER JOIN member ON quest_interested.qi_id_number = member.id WHERE quest_interested.qi_id_quest = '".$_GET['id']."'  AND quest_interested.qi_status_agree = '1' ";
+                                   $resultinterested = mysqli_query($conn, $sqlinterested);
+
+
+                                   ?>
+                                   <h4 class="text-dark mb-3">Quest Status | สถานะของภารกิจ</h4>
+                                   <div class="from-details01">
+                                    <div class="list-interested">
+                                       <div class="t-interested01">การตอบกลับของนักผจญภัย</div>
+
+                                       <?php $numadd = 0; while ($rsstinterested = mysqli_fetch_assoc($resultinterested)) {
+                                        if ($rsstinterested['qi_status'] == '1') {
+                                            $numadd += 1;
+                                        }
+
+                                        ?>
+                                        <div class="list-in-01 mem-<?= $rsstinterested['id']?> recllass">
+                                            <div class="h33 in_l"><?= $rsstinterested['member_username']?> </div>
+                                            <div class="bt-choose button1 in_r" id="lismenbber" data-id="<?=$rsstinterested['id'] ?>" data-q="<?=$_GET['id'] ?>" data-nm="<?=$rsstinterested['member_username'] ?>" data-st="<?=$rsstinterested['qi_status'] ?>">เลือกนักผจญภัย
+                                            </div>
+                                            <?php if ($rsstinterested['qi_status'] == '1') { 
+                                                    if ($rsstinterested['qi_mission'] == '1') {
+                                                        ?>
+                                                        <div style="color: #09a52d;float: left;">รับมอบภารกิจจากนักผจญภัยท่านนี้เรียบร้อย</div>
+
+                                                        <?php
+                                                    }else{
+                                                ?>
+                                                <div style="color: red;float: left;">รับนักผจญภัยท่านนี้</div>
+                                            <?php } } ?>
+                                        </div>
+
+                                    <?php } ?>
+                                    <div class="footers">จำนวนนักผจญภัยที่ต้องการ <?=$numhuman ?> / <label class="numlistadd"><?=$numadd ?></label> คน</div>
                                 </div>
-                                 <div class="from-details detailmenber" >
-                                    <div class="d-l">
+
+
+                            </div>
+                           
+
+                            <div class="from-details detailmenber" >
+                                <div class="d-l">
                                     <div class="img-logo"><img src="plugin/myModal/02.jpg" class="imagecontart"> </div>   </div>
                                     <div class="d-r">
-                                    <div class="listmenberin"></div>
+                                        <div class="listmenberin">
+                                            <div class="d-r">
+                                             <h3 class="hname">BOUKENSHA CONTRACT INFORMATION</h3>
+                                             <hr>
+                                             <h5 class="hname">ข้อมูลการติดต่อกลับนักผจญภัย</h5>
+                                         </div>
+                                        </div>
                                     </div>
                                 </div>
+                                 <div class="from-details01">
+                                    <div class="form-bt">
+                                    <div class="button2 w-01" id="agreemenber" data-idq="" data-idmen="" data-st="">ตกลงรับนักผจญภัย</div>
+                                    
+                                    <div class="button2 w-01" id="mission" data-idq="" data-idmen="">รับมอบภารกิจ</div>
+                                    <div class="button2 bty w-01">แก้ไขข้อมูลภารกิจ</div>
+                                    <div class="button2 w-01" style="background: red" id="cancelagreemenber" data-idq="" data-idmen="" data-st="">ยกเลิกนักผจญภัย</div>
+                                </div>
+                                </div>
+
                                 <div class="listnammen">นักผจญภัยผู้รับผิดชอบภารกิจ....<label class="listnamemenber"></label>......</div>
                                 <div class="listnammen">
                                     <small id="quest_namehelps" class="form-text text-danger">* หากกด "ตกลงรับนักผจญภัย" แล้ว สถานะของภารกิจจะเปลี่ยนเป็น "นักผจญภัยรับภารกิจ" โดยอัตโนมัติ</small>
@@ -457,27 +493,23 @@ if (isset($_POST['ipquest'])) {
 
 
                                 </div>
-                                <div class="form-bt">
-                                <div class="button2 w-01" id="agreemenber" data-idq="" data-idmen="">ตกลงรับนักผจญภัย</div>
-                                <div class="button2 w-01">รับมอบภารกิจ</div>
-                                <div class="button2 bty w-01">แก้ไขข้อมูลภารกิจ</div>
-                                </div>
-
                                
+
+
                             <?php } ?>
-                            </div>
-                            <div class="listDetalMlist"></div>
-                            <div class="clearfix mb-5" style="clear:both"></div>
-                            <hr class="border-dark">
-                            <div class="col-md-12 mt-2 mb-2">
-                                <h4 class="text-dark mb-5">Boukensha Forum | กระดานติดต่อนักผจญภัย</h4>
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="fb-comments text-dark" data-href="quest-detail.php?id=<?= $_GET['id'] ?>" data-width="100%" data-numposts="5"></div>
-                                    </div>
+                        </div>
+                        <div class="listDetalMlist"></div>
+                        <div class="clearfix mb-5" style="clear:both"></div>
+                        <hr class="border-dark">
+                        <div class="col-md-12 mt-2 mb-2">
+                            <h4 class="text-dark mb-5">Boukensha Forum | กระดานติดต่อนักผจญภัย</h4>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="fb-comments text-dark" data-href="quest-detail.php?id=<?= $_GET['id'] ?>" data-width="100%" data-numposts="5"></div>
                                 </div>
                             </div>
-                            <small id="quest_namehelps" class="form-text text-danger">*หากไม่สามารถเชื่อมต่อปลั้กอินของ Facebook เพื่อแสดงความเห็นได้ให้ทดลองเปลี่ยนไปใช้บริการผ่าน Google Chome Brower</small>
+                        </div>
+                        <small id="quest_namehelps" class="form-text text-danger">*หากไม่สามารถเชื่อมต่อปลั้กอินของ Facebook เพื่อแสดงความเห็นได้ให้ทดลองเปลี่ยนไปใช้บริการผ่าน Google Chome Brower</small>
                            <!--  <hr class="border-dark">
                             <div class="col-md-12 mt-2 mb-2">
                                 <h4 class="text-dark">Quest Status | สถานะของภารกิจ (สำหรับผู้มอบหมายภารกิจ) IP Address : <?= $rs_quest['quest_ip'] ?></h4>

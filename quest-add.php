@@ -240,7 +240,7 @@ if ($res) {
             background-size: cover;
         }
         
-    }
+    input{width: unset;}
 
         /* .bg-blank-color {
             background-color: rgb(0, 0, 0);
